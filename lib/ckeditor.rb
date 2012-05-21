@@ -1,5 +1,6 @@
 require 'orm_adapter'
 require 'pathname'
+require 'find'
 
 module Ckeditor
   IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/pjpeg', 'image/tiff', 'image/x-png']
@@ -54,7 +55,7 @@ module Ckeditor
   
   def self.assets
     @@assets ||= begin
-      Dir[root_path.join('vendor/assets/javascripts/ckeditor/**', '*.{js,css}')].inject([]) do |list, path|
+      Find.find("#{root_path}/vendor/assets/javascripts/ckeditor").to_a.grep(/\.js|\.css/).inject([]) do |list, path|
         unless path.include?("/ckeditor/filebrowser/")
           list << Pathname.new(path).relative_path_from(root_path.join('vendor/assets/javascripts'))
         end
